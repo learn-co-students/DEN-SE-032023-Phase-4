@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 
-# 📚 Review With Students:
-    # API Fundamentals
-    # MVC Architecture and Patterns / Best Practices
-    # RESTful Routing
-    # Serialization
-    # Postman
-
 # Set Up:
     # In Terminal, `cd` into `server` and run the following:
         # export FLASK_APP=app.py
