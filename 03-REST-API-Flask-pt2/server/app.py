@@ -31,8 +31,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 
 # 1.✅ Import NotFound from werkzeug.exceptions for error handling
-
-
+from werkzeug.exceptions import NotFound
 from models import db, Production, CastMember
 
 app = Flask(__name__)
@@ -86,7 +85,8 @@ class ProductionByID(Resource):
     def get(self,id):
         production = Production.query.filter_by(id=id).first()
 # 3.✅ If a production is not found raise the NotFound exception
-    
+        if not production:
+            abort(404, "The Production you were looking for was not found!")
         production_dict = production.to_dict()
         response = make_response(
             production_dict,
@@ -103,6 +103,25 @@ class ProductionByID(Resource):
     # 4.4 Loop through the request.form object and update the productions attributes. Note: Be cautions of the data types to avoid errors.
     # 4.5 add and commit the updated production 
     # 4.6 Create and return the response
+    def patch(self, id):
+        production = Production.query.filter_by(id=id).first()
+
+        if not production:
+            abort(404, 'The Production you were trying to update was not found!')
+
+        request_json = request.get_json()
+        for key in request_json:
+            setattr(production, key, request_json[key])
+        db.session.add(production)
+        db.session.commit()
+
+        response = make_response(
+            production.to_dict(),
+            200
+        )
+
+        return response
+
   
 # 5.✅ Delete
     # 5.1 Create a delete method, pass it self and the id
@@ -110,6 +129,20 @@ class ProductionByID(Resource):
     # 5.3 If the production is not found raise the NotFound exception
     # 5.4 delete the production and commit 
     # 5.5 create a response with the status of 204 and return the response 
+
+    def delete(self, id):
+        production = Production.query.filter_by(id=id).first()
+        if not production:
+            abort(404, 'The Production you were trying to delete was not found!')
+
+
+        db.session.delete(production)
+        db.session.commit()
+
+        response = make_response("", 204)
+
+        return response
+
   
 
    
@@ -119,6 +152,13 @@ api.add_resource(ProductionByID, '/productions/<int:id>')
     # 2.1 Create the decorator and pass it NotFound
     # 2.2 Use make_response to create a response with a message and the status 404
     # 2.3 return the response
+@app.errorhandler(NotFound)
+def handle_not_fond(e):
+    response = make_response(
+        "Not Found: Sorry the resource you are looking for can not be found!",
+        404
+    )
+    return response
 
 
 # To run the file as a script
