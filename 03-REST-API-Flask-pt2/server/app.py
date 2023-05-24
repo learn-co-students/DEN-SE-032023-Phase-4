@@ -58,7 +58,11 @@ class Productions(Resource):
 
     def post(self):
         request_json = request.get_json()
-       
+
+
+       #This object uses mass assigment, mass assignment is when values are assigned automatically to multiple attributes of an object
+       #Some benefits are convenience, efficency, flexibility, and consistency
+       #Mass assignment can include validations to prevent unauthorized updates
         new_production = Production(
             title=request_json['title'],
             genre=request_json['genre'],
