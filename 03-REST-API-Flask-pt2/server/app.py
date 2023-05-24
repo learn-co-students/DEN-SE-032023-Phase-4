@@ -2,7 +2,20 @@
 # 📚 Review With Students:
     # REST
     # Status codes
-    # Error handling 
+    # Error handling
+
+# Yesterday we learned how to make a get and post with the flask restful api
+# As well as serializing data to only display how we want it to when make requests
+# Today we will work on error handling, patch requests, and delete requests
+
+# Error handling with flask restful api involves handling and returning error responses
+# When encountering an exception or invlaid requests.
+# Flask restful provides several ways to handle errors, and to customize the error responses.
+# Global error handler will allow you to define a global error handler using a decorator.
+# The decorator can be used to define a function that will handle your exceptions.
+# You can also define errors that are specific to a resource by implementing methods within the class.
+# Flask restful also provide the abort() function to immediately abort a request and return an error response with a status code.
+ 
 # Set up:
     # cd into server and run the following in the terminal
     # export FLASK_APP=app.py
@@ -11,6 +24,7 @@
     # flask db revision --autogenerate -m'Create tables' 
     # flask db upgrade 
     # python seed.py
+
 from flask import Flask, request, make_response, abort
 from flask_migrate import Migrate
 
@@ -80,6 +94,7 @@ class ProductionByID(Resource):
         )
         
         return response
+
 
 # 4.✅ Patch
     # 4.1 Create a patch method that takes self and id
