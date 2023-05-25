@@ -2,73 +2,41 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 // 6.✅ Verify formik and yet have been added to our package.json dependencies 
-import {useFormik} from "formik"
-import * as yup from "yup"
+  // import the useFormik hook from formik
+  // import * as yup for yup
+
+
 
 function ProductionForm({addProduction}) {
-const [errors, setError] = useState()
 
   const history = useHistory()
-  // 8.✅ Use yup to create client side validations
-  const formSchema = yup.object().shape({
-    title: yup.string().required("Please enter a title"),
-    budget: yup.number().positive()
-  })
+  // 7.✅ Use yup to create client side validations
+ 
 
-  // 7.✅ useFormik hook
-  const formik = useFormik({
-    initialValues:{
-      title:"",
-      genre:"",
-      budget:"",
-      director:"",
-      description:""
-    },
-    validationSchema: formSchema,
-    onSubmit:(values) => {
-      fetch('/productions',{
-        method:"POST",
-        headers: {
-          "Content-Type":"application/json"
-        },
-        body: JSON.stringify(values)
-      })
-      .then(res => {
-        //10.✅ handle server side errors with res.ok
-        if(res.ok){
-          res.json().then(production => {
-            addProduction(production)
-            history.push(`/productions/${production.id}`)
-          })
-        } else {
-          res.json().then(errors => setError(errors.message))
-        }
-      })
-    }
-  })
- // 9.✅ render formik errors 
+
+  // 9.✅ useFormik hook
+
+
     return (
       <div className='App'>
-      <Form onSubmit={formik.handleSubmit} >
-        {errors&& <h3 style={{color:'red'}}>{errors.toUpperCase()}</h3>}
-        {formik.errors&& Object.values(formik.errors).map(error => <h3 style={{color:'red'}}>{error.toUpperCase()}</h3>)}
+      <Form >
         <label>Title </label>
-        <input type='text' name='title' value={formik.values.title} onChange={formik.handleChange}/>
+        <input type='text' name='title' />
         
         <label> Genre</label>
-        <input type='text' name='genre' value={formik.values.genre} onChange={formik.handleChange} />
+        <input type='text' name='genre' />
       
         <label>Budget</label>
-        <input type='number' name='budget' value={formik.values.budget} onChange={formik.handleChange} />
+        <input type='number' name='budget' />
       
         <label>Image</label>
-        <input type='text' name='image' value={formik.values.image} onChange={formik.handleChange}/>
+        <input type='text' name='image'  />
       
         <label>Director</label>
-        <input type='text' name='director' value={formik.values.director} onChange={formik.handleChange}/>
+        <input type='text' name='director'/>
       
         <label>Description</label>
-        <textarea type='text' rows='4' cols='50' name='description' value={formik.values.description} onChange={formik.handleChange}/>
+        <textarea type='text' rows='4' cols='50' name='description' />
       
         <input type='submit' />
       </Form> 

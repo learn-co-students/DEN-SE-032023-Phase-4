@@ -8,21 +8,12 @@ function ProductionDetail({handleEdit, deleteProduction}) {
   //Student Challenge: GET One 
   const params = useParams()
   const history = useHistory()
-  console.log(params)
   useEffect(()=>{
-   fetch(`/productions/${params.id}`)
-   .then(res => res.json())
-   .then(setProduction)
+
   },[])
 
   const handleDelete = (production) => {
-   fetch(`/productions/${params.id}`,{
-    method:'DELETE'
-   })
-   .then(() => {
-    deleteProduction(production)
-    history.push('/')
-   })
+
   }
 
   
