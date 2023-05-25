@@ -9,10 +9,19 @@ function ProductionDetail({handleEdit, deleteProduction}) {
   const params = useParams()
   const history = useHistory()
   useEffect(()=>{
-
+    fetch(`/productions/${params.id}`)
+    .then((res)=> res.json())
+    .then(setProduction)
   },[])
 
   const handleDelete = (production) => {
+    fetch(`/productions/${params.id}`, {
+      method: "DELETE"
+    })
+    .then(()=> {
+      deleteProduction(production)
+      history.push('/')
+    })
 
   }
 
