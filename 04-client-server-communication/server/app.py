@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # 📚 Review With Students:
-    # CORS 
+    # CORS
+#Used to block request from domains other than the servers domain
 # Set up:
     # cd into server and run the following in Terminal
         # export FLASK_APP=app.py
@@ -9,6 +10,10 @@
         # flask db revision --autogenerate -m'Create tables' 
         # flask db upgrade 
         # python seed.py
+
+#To run react and flask together we will use gunicorn and honcho
+#Gunicorn is a wsgi server used to run python web applications, provides performance, flexibility, and simplicity
+#Honcho is a command-line application which helps you manage and run Procfile-based applications. It helps you simplify deployment and configuration of your applications in both development and production environments.
 # Running React Together 
     # Verify that gunicorn and honcho have been added to the pipenv
     # Create Procfile.dev in root
@@ -25,14 +30,14 @@ from flask_restful import Api, Resource
 from werkzeug.exceptions import NotFound
 
 # 4.✅ Import CORS from flask_cors, invoke it and pass it app
-
+from flask_cors import CORS
 
 # 5.✅ Start up the server / client and navigate to client/src/App.js
 
 from models import db, Production, CastMember
 
 app = Flask(__name__)
-
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
