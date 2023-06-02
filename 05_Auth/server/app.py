@@ -3,7 +3,6 @@
 # flask db init
 # flask db revision --autogenerate -m 'Create tables' 
 # flask db upgrade 
-
 # Standard imports/boilerplate setup (We added session)
 from flask import Flask, request, make_response, jsonify, session
 from flask_migrate import Migrate
@@ -32,54 +31,15 @@ app.secret_key = b'\xb8C\xack"}]c_\xb7\xf0\xcdng\xe7\xdf'
         # 3.3.2 Use the name to query the user with a .filter
         # 3.3.3 If found set the user_id to the session hash
         # 3.3.4 convert the user to_dict and send a response back to the client 
-class Users(Resource):
-     def post(self):
-        form_json = request.get_json()
-        new_user = User(
-            name=form_json['name'],
-        )
-        db.session.add(new_user)
-        print(new_user)
-        db.session.commit()
-        session['user_id'] = new_user.id
-        return make_response(
-            new_user.to_dict(),
-            201,
-        )
-api.add_resource(Users, '/login')
+
 
 # 3.✅ Create a check login route that will save the user to the session
-class check_login(Resource):
-    def get(self):
-        user_id = session.get("user_id")
 
-        if user_id:
-            user = User.query.filter(User.id == session["user_id"]).first()
-            return make_response(
-                user.to_dict(),
-                200,
-            )
-api.add_resource(check_login, '/check_login')
 
 # 4. Create a logout route now! set session to None
-class logout(Resource):
-    def delete(self):
-        session['user_id'] = None
-        return make_response(
-            "Logged out",
-            200,
-        )
-api.add_resource(logout, '/logout')
+
 # Use @app.before_request, to run a function before every request
 
-@app.before_request
-def check_session():
-    print(session)
-    if session.get("user_id") is None:
-        session["user_id"] = None
-    else:
-        print("User is logged in")
-        print(session["user_id"])
 
 
 if __name__ == '__main__':
