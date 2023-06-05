@@ -2,7 +2,74 @@ import {useEffect, useState} from "react";
 import './App.css';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
+  //add a state for passwords
 
+  // useEffect(()=>{
+  //   fetch("/check_login")
+  //   .then(r => r.json())
+  //   .then(user => setUser(user))
+  // },[])
+
+  function handleSubmit(e){
+    e.preventDefault();
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      //post the password to the backend
+      body: JSON.stringify({name: name})
+    })
+    .then(res => res.json())
+    .then(data => setUser(data))
+
+  }
+    
+
+  function handleLogout(e){
+    e.preventDefault()
+    fetch("/logout", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(setUser(null))
+  }
+
+
+  function handleUsername(e){
+    setName(e.target.value)
+  }
+
+  //create a handle password function
+
+  if(user){
+    return (
+      <>
+      <h1>Welcome, {user.name}</h1>
+        <form onSubmit={handleLogout}>
+          <button type="submit">Logout</button>
+        </form>
+      </>
+    )
+  }
+  else{
+    return (
+      <>
+      <form onSubmit={handleSubmit}>
+        <h2>Username</h2>
+        <input type="text" value={name} onChange={handleUsername}/>
+        {/* <h2>Password</h2>
+        <input type="text" value={password} onChange={handlePassword}/> */}
+        
+         <button type="submit">Login</button>
+      </form>
+      </>
+    );
+  }
 }
 
 export default App;
