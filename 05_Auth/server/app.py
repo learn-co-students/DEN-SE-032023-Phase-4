@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from models import db, User
+from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -20,6 +21,7 @@ db.init_app(app)
 
 api = Api(app)
 CORS(app)
+bcrypt = Bcrypt(app)
 #1. ✅ python -c 'import os; print(os.urandom(16))'
 #Used to hash the session data
 app.secret_key = b'\xb8C\xack"}]c_\xb7\xf0\xcdng\xe7\xdf'
@@ -38,6 +40,7 @@ class Users(Resource):
         new_user = User(
             name=form_json['name'],
         )
+        new_user.password = form_json['password']
         db.session.add(new_user)
         print(new_user)
         db.session.commit()
@@ -48,17 +51,31 @@ class Users(Resource):
         )
 api.add_resource(Users, '/login')
 
+class login(Resource):
+    def post(self):
+        data = request.get_json()
+        name = data['name']
+        password = data['password']
+        user = User.query.filter_by(name=name).first()
+        if user and user.authenticate(password):
+            session['user_id'] = user.id  # Set the user_id in the session
+            return make_response(user.to_dict(), 200)
+        else:
+            return make_response("Invalid credentials", 401)
+api.add_resource(login, '/signin')
+
 # 3.✅ Create a check login route that will save the user to the session
 class check_login(Resource):
-    def get(self):
-        user_id = session.get("user_id")
-
-        if user_id:
-            user = User.query.filter(User.id == session["user_id"]).first()
-            return make_response(
-                user.to_dict(),
-                200,
-            )
+    def post(self):
+        data = request.get_json()
+        name = data['name']
+        password = data['password']
+        user = User.query.filter_by(name=name).first()
+        if user and user.authenticate(password):
+            session['user_id'] = user.id  # Set the user_id in the session
+            return make_response(user.to_dict(), 200)
+        else:
+            return make_response("Invalid credentials", 401)
 api.add_resource(check_login, '/check_login')
 
 # 4. Create a logout route now! set session to None

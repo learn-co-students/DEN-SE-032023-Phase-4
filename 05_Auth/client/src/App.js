@@ -6,15 +6,15 @@ function App() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(()=>{
-    fetch("/check_login")
-    .then(r => r.json())
-    .then(user => setUser(user))
-  },[])
+  // useEffect(()=>{
+  //   fetch("/check_login")
+  //   .then(r => r.json())
+  //   .then(user => setUser(user))
+  // },[])
 
   function handleSubmit(e){
     e.preventDefault();
-    fetch("/login", {
+    fetch("/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -62,9 +62,9 @@ function App() {
       <form onSubmit={handleSubmit}>
         <h2>Username</h2>
         <input type="text" value={name} onChange={handleUsername}/>
-        {/* <h2>Password</h2>
+        <h2>Password</h2>
         <input type="text" value={password} onChange={handlePassword}/>
-         */}
+        
          <button type="submit">Login</button>
       </form>
       </>
