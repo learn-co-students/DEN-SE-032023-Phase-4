@@ -5,6 +5,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   //add a state for passwords
+  const [password, setPassword] = useState("")
 
   // useEffect(()=>{
   //   fetch("/check_login")
@@ -14,13 +15,13 @@ function App() {
 
   function handleSubmit(e){
     e.preventDefault();
-    fetch("/login", {
+    fetch("/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       //post the password to the backend
-      body: JSON.stringify({name: name})
+      body: JSON.stringify({name: name, password: password})
     })
     .then(res => res.json())
     .then(data => setUser(data))
@@ -44,6 +45,9 @@ function App() {
     setName(e.target.value)
   }
 
+  function handlePassword(e){
+    setPassword(e.target.value)
+  }
   //create a handle password function
 
   if(user){
@@ -62,9 +66,8 @@ function App() {
       <form onSubmit={handleSubmit}>
         <h2>Username</h2>
         <input type="text" value={name} onChange={handleUsername}/>
-        {/* <h2>Password</h2>
-        <input type="text" value={password} onChange={handlePassword}/> */}
-        
+        <h2>Password</h2>
+        <input type="text" value = {password} onChange={handlePassword}/>
          <button type="submit">Login</button>
       </form>
       </>
